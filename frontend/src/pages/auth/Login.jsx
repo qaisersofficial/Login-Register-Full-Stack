@@ -1,5 +1,8 @@
 import { Button, TextField, Typography, Box } from "@mui/material";
 import { useState } from "react";
+import { loginUser } from "../../api/auth";
+import { useNavigate } from "react-router-dom";
+
 
 export default function Login() {
   const [form, setForm] = useState({ email: "", password: "" });
@@ -7,10 +10,17 @@ export default function Login() {
   const handleChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
 
-  const handleSubmit = (e) => {
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Login:", form);
-    // Later: API POST to /login
+    try {
+    const res = await loginUser(form);
+    console.log("Logged in successfully:", res.data);
+    navigate("/dashboard");
+  } catch (err) {
+    console.error("Login error:", err.response?.data || err.message);
+  }
   };
 
   return (
