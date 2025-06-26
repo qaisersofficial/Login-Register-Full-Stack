@@ -1,5 +1,6 @@
 import { Button, TextField, Typography, Box } from "@mui/material";
 import { useState } from "react";
+import { registerUser } from "../../api/auth";
 
 export default function Register() {
   const [form, setForm] = useState({ name: "", email: "", password: "" });
@@ -7,10 +8,14 @@ export default function Register() {
   const handleChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Register:", form);
-    // Later: API POST to /register
+    try {
+    const res = await registerUser(form);
+    alert("Registered successfully:", res.data);
+  } catch (err) {
+    console.error("Registration error:", err.response?.data || err.message);
+  }
   };
 
   return (
